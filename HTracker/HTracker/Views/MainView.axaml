@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HTracker.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             x:Class="HTracker.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+	<TabControl>
+		<TabItem Header="Tracker">
+			<Grid RowDefinitions="*, auto auto" ShowGridLines="True">
+				
+			</Grid>		
+		</TabItem>
+
+		<TabItem Header="Setup">
+			<Grid RowDefinitions="auto, auto, auto, *, auto">
+				<TextBox Grid.Row="0" Watermark="How many days" Text="{Binding DaysInput}" Margin="0 10 0 0" Background="#FF00FF">
+					<TextBox.InnerRightContent>
+						<Button>Add</Button>	
+					</TextBox.InnerRightContent>
+				</TextBox>
+				<Label Grid.Row="2" HorizontalContentAlignment="Center" Margin="0 5">Add new habit</Label>
+				<TextBox Grid.Row="3" Watermark="Add new item" Background="#FF00FF"></TextBox>
+				<Button Grid.Row="4" HorizontalAlignment="Center" Margin="0 10">Add</Button>
+			</Grid>
+		</TabItem>
+	</TabControl>
+</UserControl>
