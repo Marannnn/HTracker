@@ -8,7 +8,7 @@ namespace HTracker.Model
 {
     internal class Habit
     {
-        private string? _content {  get; set; }
-        private bool _isCompleted { get; set; } = false;
+        public string? content {  get; set; }
+        public bool isCompleted { get; set; } = false;
     }
 }
