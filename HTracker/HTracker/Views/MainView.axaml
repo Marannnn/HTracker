@@ -21,7 +21,7 @@
 							<Label Grid.Column="1" Content="{Binding CurrentDay}"></Label>
 						</Grid>
 					</ListBoxItem>
-					<ListBoxItem Content="Days left:" Background="#FF00FF">
+					<ListBoxItem Content="Days left:">
 						<Grid ColumnDefinitions="auto, auto">
 							<Label Grid.Column="0">Days remaining: </Label>
 							<Label Grid.Column="1" Content="{Binding DaysRemaining}"></Label>
@@ -40,12 +40,12 @@
 
 		<TabItem Header="Setup">
 			<Grid RowDefinitions="auto, auto, auto, *, auto">
-				<TextBox Grid.Row="0" Watermark="How many days" Text="{Binding DaysCount}" Margin="0 10 0 0">
+				<TextBox Text="{Binding DaysCount}" Grid.Row="0" Watermark="How many days" Margin="0 10 0 0">
 				</TextBox>
 				<Label Grid.Row="2" HorizontalContentAlignment="Center" Margin="0 5">Add new habit</Label>
-				<TextBox Grid.Row="3" Watermark="Add new item" Background="#FF00FF"></TextBox>
-				<Button Grid.Row="4"  HorizontalAlignment="Center" Margin="0 10">Add</Button>
-				<Button Grid.Row="4" HorizontalAlignment="Right">Reset All</Button>		
+				<TextBox Text="{Binding Content}" Grid.Row="3" Watermark="Add new item"></TextBox>
+				<Button Command="{Binding AddHabit}" Grid.Row="4"  HorizontalAlignment="Center" Margin="0 10">Add</Button>
+				<Button Command="{Binding RemoveAll}" Grid.Row="4" HorizontalAlignment="Right">Reset all</Button>		
 			</Grid>
 		</TabItem>
 	</TabControl>
