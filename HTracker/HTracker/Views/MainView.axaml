@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:HTracker.ViewModels"
+			 xmlns:model="clr-namespace:HTracker.Model"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
              x:Class="HTracker.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -12,9 +13,11 @@
     <vm:MainViewModel />
   </Design.DataContext>
 	<TabControl>
+		<!--TRACKER-->
 		<TabItem Header="Tracker">
-			<Grid RowDefinitions="*, auto auto" ShowGridLines="True">
-				<ListBox Grid.Row="0">
+			<Grid RowDefinitions="auto, auto, *" ShowGridLines="True"> <!--1. Dny, 2. habit list-->
+				<!--Dny stats-->
+				<ListBox Grid.Row="0" Background="#F0FF"  Margin="0 0 0 10">
 					<ListBoxItem Background="#FF00FF">
 						<Grid ColumnDefinitions="auto, auto">
 							<Label Grid.Column="0">Current day: </Label>
@@ -34,18 +37,37 @@
 						</Grid>
 					</ListBoxItem>
 				</ListBox>
-				<ItemsControl></ItemsControl>
+				<!--Habit list-->
+				<ItemsControl ItemsSource="{Binding HabitCollection}" Grid.Row="1" Margin="0 0 0 10">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate DataType="{x:Type model:Habit}">
+							<CheckBox Content="{Binding content}" IsChecked="{Binding isCompleted}" Checked=""></CheckBox>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+				<!--Already Completed-->
+				<ItemsControl ItemsSource="{Binding HabitCollection">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate DataType="{x:Type model:Habit">
+							<Label Content="{Binding content}"></Label>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
 			</Grid>		
 		</TabItem>
-
+		<!--SETUP-->
 		<TabItem Header="Setup">
 			<Grid RowDefinitions="auto, auto, auto, *, auto">
 				<TextBox Text="{Binding DaysCount}" Grid.Row="0" Watermark="How many days" Margin="0 10 0 0">
 				</TextBox>
 				<Label Grid.Row="2" HorizontalContentAlignment="Center" Margin="0 5">Add new habit</Label>
-				<TextBox Text="{Binding Content}" Grid.Row="3" Watermark="Add new item"></TextBox>
+				<TextBox Text="{Binding Text}" Grid.Row="3" Watermark="Add new item">
+					<TextBox.KeyBindings>
+						<KeyBinding Gesture="enter" Command="{Binding AddHabit}"></KeyBinding>
+					</TextBox.KeyBindings>
+				</TextBox>
 				<Button Command="{Binding AddHabit}" Grid.Row="4"  HorizontalAlignment="Center" Margin="0 10">Add</Button>
-				<Button Command="{Binding RemoveAll}" Grid.Row="4" HorizontalAlignment="Right">Reset all</Button>		
+				<Button Command="{Binding ResetAll}" Grid.Row="4" HorizontalAlignment="Right">Reset all</Button>		
 			</Grid>
 		</TabItem>
 	</TabControl>
