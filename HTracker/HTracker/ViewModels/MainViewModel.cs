@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HTracker.Model;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 
 namespace HTracker.ViewModels;
 
@@ -17,6 +20,7 @@ public partial class MainViewModel : ViewModelBase
     private uint _daysRemaining;
     [ObservableProperty]
     private uint _daysCount;
+
 
     [ObservableProperty]
     private string _text;
@@ -49,8 +53,27 @@ public partial class MainViewModel : ViewModelBase
         HabitCollection.Clear();
     }
 
+    //TODO
+
     [RelayCommand]
-    public void CheckedHabit()
+    public void SaveAll()
+    {
+        #region Days
+
+        #endregion
+
+        #region Habits
+        List<Habit> HabitList= new List<Habit>();
+        string daysPath = Path.Combine(Directory.GetCurrentDirectory(), "habitData.txt");
+        foreach (Habit habit in HabitCollection)
+        {
+            HabitList.Add(habit);
+        }
+        string jsonString = JsonSerializer.Serialize(HabitList);
+        File.WriteAllText(daysPath, jsonString);
+        #endregion
+    }
+    public void LoadAll()
     {
 
     }
