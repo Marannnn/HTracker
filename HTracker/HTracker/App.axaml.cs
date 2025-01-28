@@ -5,7 +5,6 @@ using Avalonia.Markup.Xaml;
 
 using HTracker.ViewModels;
 using HTracker.Views;
-
 namespace HTracker;
 
 public partial class App : Application

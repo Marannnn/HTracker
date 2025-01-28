@@ -1,18 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HTracker.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace HTracker.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
     ObservableCollection<Habit> HabitCollection { get; } = new ObservableCollection<Habit>(); //kolekce, aby se mohl itemsControl aktualizovat kdykoliv se neco prida nebo odebere
-    ObservableCollection<Habit> CompletedHabitCollection { get; } = new();
 
     [ObservableProperty]
     private uint _currentDay;
@@ -45,36 +46,69 @@ public partial class MainViewModel : ViewModelBase
             Text = string.Empty;
         }
     }
+    [RelayCommand]
     public void ResetAll()
     {
+        //Days
         DaysCount = 0;
         DaysRemaining = 0;
         CurrentDay = 0;
         HabitCollection.Clear();
+
+        #region Delete file content
+        string folderPath = Folder();
+        string habitData = Path.Combine(folderPath, "habitData.json");
+        string daysData = Path.Combine(folderPath, "daysData.json");
+        //smazu obsah souboru
+        File.WriteAllText(habitData, string.Empty); 
+        File.WriteAllText(daysData, string.Empty);
+        #endregion
     }
 
-    //TODO
+    //TODO - LOAD ON STARTUP , SAVE ON CLOSE
+
+    public string Folder()
+    {
+        string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "HTracker"); //odkazuje na slozku "HTracker" v "Dokumenty"
+        Directory.CreateDirectory(folderPath); //Na te adrese vytvorim slozku
+        return folderPath;
+    }
 
     [RelayCommand]
     public void SaveAll()
     {
+        string folderPath = Folder();
         #region Days
 
         #endregion
 
         #region Habits
         List<Habit> HabitList= new List<Habit>();
-        string daysPath = Path.Combine(Directory.GetCurrentDirectory(), "habitData.txt");
+        string habitPath = Path.Combine(folderPath, "habitData.json");
         foreach (Habit habit in HabitCollection)
         {
             HabitList.Add(habit);
         }
         string jsonString = JsonSerializer.Serialize(HabitList);
-        File.WriteAllText(daysPath, jsonString);
+        File.WriteAllText(habitPath, jsonString);
         #endregion
     }
+    [RelayCommand]
     public void LoadAll()
     {
+        string folderPath = Folder();
+        #region Days
+        #endregion
 
+        #region Habits
+        List<Habit> HabitList = new List<Habit>();
+        string habitPath = Path.Combine(folderPath, "habitData.json");
+        string jsonString = File.ReadAllText(habitPath);
+        HabitList = JsonSerializer.Deserialize<List<Habit>>(jsonString);
+        foreach (Habit habit in HabitList)
+        {
+            HabitCollection.Add(habit);
+        }
+        #endregion
     }
 }
