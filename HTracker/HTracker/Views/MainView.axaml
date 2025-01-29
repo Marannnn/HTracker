@@ -17,7 +17,7 @@
 		<TabItem Header="Tracker">
 			<Grid RowDefinitions="auto, *, auto" ShowGridLines="True"> <!--1. Dny, 2. habit list-->
 				<!--Dny stats-->
-				<ListBox Grid.Row="0" Background="#F0FF"  Margin="0 0 0 10">
+				<ListBox Grid.Row="0" Margin="0 0 0 10">
 					<ListBoxItem Background="#FF00FF">
 						<Grid ColumnDefinitions="auto, auto">
 							<Label Grid.Column="0">Current day: </Label>

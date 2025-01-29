@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 
 using HTracker.ViewModels;
 using HTracker.Views;
+using System.Diagnostics;
 namespace HTracker;
 
 public partial class App : Application
@@ -20,12 +21,15 @@ public partial class App : Application
         // Without this line you will get duplicate validations from both Avalonia and CT
         BindingPlugins.DataValidators.RemoveAt(0);
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) //jestli se program spustil normalne jako desktop aplikace
         {
-            desktop.MainWindow = new MainWindow
+            var mainViewModel = new MainViewModel(); //vytvorim novou instanci classy MainViewModel (kterou potrebuju) (sama by se vytvorila pozdeji v kodu na radku 28)
+            desktop.MainWindow = new MainWindow //vytvorim nove okno desktop aplikace
             {
-                DataContext = new MainViewModel()
+                DataContext = mainViewModel //ukazuju, ze xaml kod bude binding data brat z instance mainViewModel (vytvoril jsem ho na radku 25)
             };
+            Debug.WriteLine("Metoda se spusti");
+            mainViewModel.LoadAll(); //spustim custo metodu pres inicializovanou classu MainViewModel
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -33,6 +37,7 @@ public partial class App : Application
             {
                 DataContext = new MainViewModel()
             };
+            Debug.WriteLine("NE");
         }
 
         base.OnFrameworkInitializationCompleted();

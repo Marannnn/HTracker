@@ -111,10 +111,10 @@ public partial class MainViewModel : ViewModelBase
         string daysPath = Path.Combine(folderPath, "daysData.json");
         string jsonString = File.ReadAllText(daysPath);
         daysDictionary = JsonSerializer.Deserialize<Dictionary<string, uint>>(jsonString);
-        foreach (var day in daysDictionary)
-        {
-            Debug.WriteLine($"{day.Key} {day.Value}");
-        }
+        //hardcoded
+        DaysCount = daysDictionary["DaysCount"];
+        DaysRemaining = daysDictionary["DaysRemaining"];
+        CurrentDay = daysDictionary["CurrentDay"];
         #endregion
 
         #region Habits
