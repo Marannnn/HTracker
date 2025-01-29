@@ -65,7 +65,7 @@ public partial class MainViewModel : ViewModelBase
         #endregion
     }
 
-    //TODO - LOAD ON STARTUP , SAVE ON CLOSE
+    //TODO - LOAD ON STARTUP , SAVE ON CLOSE . SAVE DATETIME AND UPDATE CURRENT DAY + DAYS REMAINING 
 
     public string Folder()
     {
@@ -78,8 +78,17 @@ public partial class MainViewModel : ViewModelBase
     public void SaveAll()
     {
         string folderPath = Folder();
-        #region Days
 
+        #region Days
+        string daysPath = Path.Combine(folderPath, "daysData.json");
+        Dictionary<string, uint> daysDictionary = new()
+        {
+            {"DaysCount", DaysCount },
+            {"DaysRemaining", DaysRemaining },
+            {"CurrentDay", CurrentDay}
+        };
+        string jsonString = JsonSerializer.Serialize(daysDictionary);
+        File.WriteAllText(daysPath, jsonString);
         #endregion
 
         #region Habits
@@ -89,7 +98,7 @@ public partial class MainViewModel : ViewModelBase
         {
             HabitList.Add(habit);
         }
-        string jsonString = JsonSerializer.Serialize(HabitList);
+        jsonString = JsonSerializer.Serialize(HabitList);
         File.WriteAllText(habitPath, jsonString);
         #endregion
     }
@@ -98,12 +107,20 @@ public partial class MainViewModel : ViewModelBase
     {
         string folderPath = Folder();
         #region Days
+        Dictionary<string, uint> daysDictionary = new();
+        string daysPath = Path.Combine(folderPath, "daysData.json");
+        string jsonString = File.ReadAllText(daysPath);
+        daysDictionary = JsonSerializer.Deserialize<Dictionary<string, uint>>(jsonString);
+        foreach (var day in daysDictionary)
+        {
+            Debug.WriteLine($"{day.Key} {day.Value}");
+        }
         #endregion
 
         #region Habits
         List<Habit> HabitList = new List<Habit>();
         string habitPath = Path.Combine(folderPath, "habitData.json");
-        string jsonString = File.ReadAllText(habitPath);
+        jsonString = File.ReadAllText(habitPath);
         HabitList = JsonSerializer.Deserialize<List<Habit>>(jsonString);
         foreach (Habit habit in HabitList)
         {
