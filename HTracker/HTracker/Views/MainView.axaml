@@ -42,7 +42,7 @@
 					<ItemsControl ItemsSource="{Binding HabitCollection}" Margin="0 0 0 10">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type model:Habit}">
-								<CheckBox Content="{Binding content}" IsChecked="{Binding isCompleted}" Checked=""></CheckBox>
+								<CheckBox Content="{Binding content}" IsChecked="{Binding isCompleted}"></CheckBox>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>

@@ -28,8 +28,11 @@ public partial class App : Application
             {
                 DataContext = mainViewModel //ukazuju, ze xaml kod bude binding data brat z instance mainViewModel (vytvoril jsem ho na radku 25)
             };
+            
             Debug.WriteLine("Metoda se spusti");
             mainViewModel.LoadAll(); //spustim custo metodu pres inicializovanou classu MainViewModel
+
+            desktop.Exit += OnAppExit; //"kdyz se aplikace vypne, zavolej event handler ,OnAppExit," = "Kdyz se stane desktop.Exit, spust event handler OnAppExit". Kdyby tam bylo -= tak to znamena - "Kdyz se stane tohle, nespoustej tenhle event handler"
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -41,5 +44,15 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnAppExit(object? sender, ControlledApplicationLifetimeExitEventArgs e) //event handler
+    {
+        Debug.WriteLine("Exit");
+        
+    }
+
+    private void OnAppStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
+    {
     }
 }
