@@ -6,6 +6,8 @@ using Avalonia.Markup.Xaml;
 using HTracker.ViewModels;
 using HTracker.Views;
 using System.Diagnostics;
+using HTracker.Model;
+
 namespace HTracker;
 
 public partial class App : Application
@@ -28,10 +30,6 @@ public partial class App : Application
             {
                 DataContext = mainViewModel //ukazuju, ze xaml kod bude binding data brat z instance mainViewModel (vytvoril jsem ho na radku 25)
             };
-            
-            Debug.WriteLine("Metoda se spusti");
-            mainViewModel.LoadAll(); //spustim custo metodu pres inicializovanou classu MainViewModel
-
             desktop.Exit += OnAppExit; //"kdyz se aplikace vypne, zavolej event handler ,OnAppExit," = "Kdyz se stane desktop.Exit, spust event handler OnAppExit". Kdyby tam bylo -= tak to znamena - "Kdyz se stane tohle, nespoustej tenhle event handler"
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
@@ -40,7 +38,6 @@ public partial class App : Application
             {
                 DataContext = new MainViewModel()
             };
-            Debug.WriteLine("NE");
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -49,10 +46,5 @@ public partial class App : Application
     private void OnAppExit(object? sender, ControlledApplicationLifetimeExitEventArgs e) //event handler
     {
         Debug.WriteLine("Exit");
-        
-    }
-
-    private void OnAppStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
-    {
     }
 }

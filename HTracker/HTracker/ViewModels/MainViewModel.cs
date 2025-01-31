@@ -13,7 +13,7 @@ namespace HTracker.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    ObservableCollection<Habit> HabitCollection { get; } = new ObservableCollection<Habit>(); //kolekce, aby se mohl itemsControl aktualizovat kdykoliv se neco prida nebo odebere
+    private ObservableCollection<Habit> HabitCollection { get;} = new ObservableCollection<Habit>(); //kolekce, aby se mohl itemsControl aktualizovat kdykoliv se neco prida nebo odebere
 
     [ObservableProperty]
     private uint _currentDay;
@@ -40,10 +40,28 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    public void SetHabit(List<Habit> habitList) //vezme list (z DataManager) a postupne prida habity do HabitCollection, aby mohla zustat private
+    {
+        foreach (Habit habit in habitList)
+        {
+            HabitCollection.Add(habit);
+        }
+    }
+
+    public List<Habit> GetHabits()
+    {
+        List<Habit> habitList = new();
+        foreach (Habit habit in HabitCollection)
+        {
+            habitList.Add(habit);
+        }
+        return habitList;
+    }
+
     [RelayCommand]
     public void AddHabit()
     {
-        if (string.IsNullOrWhiteSpace(Text) == false) //jestli uzivatel neco napsal
+        if(string.IsNullOrWhiteSpace(Text) == false) //jestli uzivatel neco napsal
         {
             HabitCollection.Add(new Habit() //pridam novy element do kolekce, objekt Habit a pridam mu vlastnosti. XAML content pak odkazuje na "content" tohoto objektu
             {
@@ -56,20 +74,21 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void ResetAll()
     {
-        // //Days
-        // DaysCount = 0;
-        // DaysRemaining = 0;
-        // CurrentDay = 0;
-        // HabitCollection.Clear();
-        //
-        // #region Delete file content
-        // string folderPath = Folder();
-        // string habitData = Path.Combine(folderPath, "habitData.json");
-        // string daysData = Path.Combine(folderPath, "daysData.json");
-        // //smazu obsah souboru
-        // File.WriteAllText(habitData, string.Empty); 
-        // File.WriteAllText(daysData, string.Empty);
-        // #endregion
+        //deklarace, vytvoreni slozky
+        string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "HTracker"); //odkazuje na slozku "HTracker" v "Dokumenty"
+        //Days
+        DaysCount = 0;
+        DaysRemaining = 0;
+        CurrentDay = 0;
+        //habits
+        HabitCollection.Clear();
+        
+        //delete file content
+        string habitData = Path.Combine(folderPath, "habitData.json");
+        string daysData = Path.Combine(folderPath, "daysData.json");
+        //smazu obsah souboru
+        File.WriteAllText(habitData, string.Empty); 
+        File.WriteAllText(daysData, string.Empty);
     }
 
     //TODO - SAVE ON CLOSE . SAVE DATETIME AND UPDATE CURRENT DAY + DAYS REMAINING 
@@ -77,35 +96,9 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void SaveAll()
     {
-        // DataManager dataManager = new(DaysCount, DaysRemaining, CurrentDay);
-        // dataManager.SaveAll();
+        DataManager test = new DataManager(this);
+       test.SaveAll();
 
    
-    }
-    [RelayCommand]
-    public void LoadAll()
-    {
-        // string folderPath = Folder();
-        // #region Days
-        // Dictionary<string, uint> daysDictionary = new();
-        // string daysPath = Path.Combine(folderPath, "daysData.json");
-        // string jsonString = File.ReadAllText(daysPath);
-        // daysDictionary = JsonSerializer.Deserialize<Dictionary<string, uint>>(jsonString);
-        // //hardcoded
-        // DaysCount = daysDictionary["DaysCount"];
-        // DaysRemaining = daysDictionary["DaysRemaining"];
-        // CurrentDay = daysDictionary["CurrentDay"];
-        // #endregion
-        //
-        // #region Habits
-        // List<Habit> HabitList = new List<Habit>();
-        // string habitPath = Path.Combine(folderPath, "habitData.json");
-        // jsonString = File.ReadAllText(habitPath);
-        // HabitList = JsonSerializer.Deserialize<List<Habit>>(jsonString);
-        // foreach (Habit habit in HabitList)
-        // {
-        //     HabitCollection.Add(habit);
-        // }
-        // #endregion
     }
 }

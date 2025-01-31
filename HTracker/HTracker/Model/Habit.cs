@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HTracker.Model
 {
-    internal class Habit
+    public class Habit
     {
         public string? content {  get; set; }
         public bool isCompleted { get; set; } = false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using HTracker.ViewModels;
@@ -17,7 +18,7 @@ public class DataManager(MainViewModel mainViewModel)
         return folderPath;
     }
         //ULOZIT - v mainViweModel 
-    public void SaveAll()
+    public void SaveAll() //potrebuju vzit curr running data a ulozit je 
     {
         #region Days
         folderPath = Path.Combine(Folder(), "daysData.json");
@@ -30,9 +31,18 @@ public class DataManager(MainViewModel mainViewModel)
         jsonString = JsonSerializer.Serialize(daysDictionary);
         File.WriteAllText(folderPath, jsonString);
         #endregion
+        
+        #region Habits
+        //potrebuju accesnout habity z HabitCollection -> dat do jsonString -> vepsat do souboru
+        folderPath = Path.Combine(Folder(), "habitsData.json");
+        List<Habit> habitList = new List<Habit>();
+        habitList = mainViewModel.GetHabits();
+        jsonString = JsonSerializer.Serialize(habitList);
+        File.WriteAllText(folderPath, jsonString);
+        #endregion
     }
-
-    public void LoadAll()
+    
+    public void LoadAll() //potrebuju vzit ulozena data a dat je do current running
     {
         #region Days
         folderPath = Path.Combine(Folder(), "daysData.json");
@@ -46,11 +56,10 @@ public class DataManager(MainViewModel mainViewModel)
         }
         #endregion
         #region Habits
-        folderPath = Path.Combine(Folder(), "habitsData.json");
-        jsonString = File.ReadAllText(folderPath);
-        var habitsDictionary = JsonSerializer.Deserialize<Dictionary<string, uint>>(jsonString);
-        //TODO: 
-        mainViewModel.
+        folderPath = Path.Combine(Folder(), "habitsData.json"); //adresa souboru
+        jsonString = File.ReadAllText(folderPath); //prevedu do .json do stringu
+        var habitList = JsonSerializer.Deserialize<List<Habit>>(jsonString); //priradim objekty .json do habitList
+        mainViewModel.SetHabit(habitList); //spusti se metoda SetHabit v MainViewModel -> ta prida obsah habitList do jeji ObservableCollection HabitCollection, abych vlastne primo nepracoval s HabitCollection(aby nemusela byt public)
         #endregion
     }
 
