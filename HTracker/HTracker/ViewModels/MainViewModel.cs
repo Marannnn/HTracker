@@ -13,6 +13,7 @@ namespace HTracker.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    public DateTime trackingStart { get; set; }
     private ObservableCollection<Habit> HabitCollection { get;} = new ObservableCollection<Habit>(); //kolekce, aby se mohl itemsControl aktualizovat kdykoliv se neco prida nebo odebere
 
     [ObservableProperty]
@@ -21,7 +22,6 @@ public partial class MainViewModel : ViewModelBase
     private uint _daysRemaining;
     [ObservableProperty]
     private uint _daysCount;
-
 
     [ObservableProperty]
     private string _text;
@@ -38,6 +38,7 @@ public partial class MainViewModel : ViewModelBase
         {
             DaysRemaining = DaysCount - CurrentDay;
         }
+        trackingStart = DateTime.Now;
     }
 
     public void SetHabit(List<Habit> habitList) //vezme list (z DataManager) a postupne prida habity do HabitCollection, aby mohla zustat private
