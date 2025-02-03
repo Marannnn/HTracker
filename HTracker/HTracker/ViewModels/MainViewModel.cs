@@ -41,6 +41,7 @@ public partial class MainViewModel : ViewModelBase
         trackingStart = DateTime.Now;
     }
 
+    #region DataManager Methods
     public void SetHabit(List<Habit> habitList) //vezme list (z DataManager) a postupne prida habity do HabitCollection, aby mohla zustat private
     {
         foreach (Habit habit in habitList)
@@ -59,6 +60,14 @@ public partial class MainViewModel : ViewModelBase
         return habitList;
     }
 
+    public void UnCheckHabits()
+    {
+        foreach (Habit habit in HabitCollection)
+        {
+            habit.isCompleted = false;
+        }
+    }
+
     [RelayCommand]
     public void AddHabit()
     {
@@ -72,6 +81,8 @@ public partial class MainViewModel : ViewModelBase
             Text = string.Empty;
         }
     }
+    #endregion
+
     [RelayCommand]
     public void ResetAll()
     {
