@@ -49,7 +49,7 @@ public partial class App : Application
     
     private void OnAppExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
     {
-        _mainViewModel.Hello();
+        _mainViewModel.SaveAll();
     }
 
 }

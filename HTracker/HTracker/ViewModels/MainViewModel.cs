@@ -13,6 +13,7 @@ namespace HTracker.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    private DataManager _dataManager;
     public DateTime trackingStart { get; set; }
     private ObservableCollection<Habit> HabitCollection { get;} = new ObservableCollection<Habit>(); //kolekce, aby se mohl itemsControl aktualizovat kdykoliv se neco prida nebo odebere
 
@@ -28,8 +29,8 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel() //konstrukotr se spusti kdyz se inicializuje classa
     {
-        DataManager dataManager = new(this);
-        dataManager.LoadAll();
+        _dataManager= new(this);
+        _dataManager.LoadAll();
     }
 
     partial void OnDaysCountChanged(uint value) //tahle metoda je tvorena automaticky diky [ObservableProperty] a spusti se kdykoliv, kdyz se _daysCount zmeni. Ja tady tu metodu jenom "specifikuju" a urcuju ji logiku, co se stane, sama o sobe uz ale existuje
@@ -114,5 +115,6 @@ public partial class MainViewModel : ViewModelBase
     public void SaveAll()
     {
         //TODO: save all
+        _dataManager.SaveAll();
     }
 }

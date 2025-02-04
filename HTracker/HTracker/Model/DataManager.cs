@@ -11,8 +11,8 @@ namespace HTracker.Model;
 public class DataManager(MainViewModel mainViewModel)
 {
     /// <summary>
-    /// FINISHED: load dates and change CurrentDay and DaysRemaining, Change CurrentDay and DaysRemaining when changing DaysCount in the UI
-    /// TODO: Save on an app exit
+    /// FINISHED: Save on an app exit, load dates and change CurrentDay and DaysRemaining, Change CurrentDay and DaysRemaining when changing DaysCount in the UI
+    /// TODO: , DAYS COUNT weird TRACKINGSTART
     /// </summary>
     private readonly DateTime _todayDate = DateTime.Now;
     string folderPath;
