@@ -34,12 +34,17 @@ public partial class MainViewModel : ViewModelBase
 
     partial void OnDaysCountChanged(uint value) //tahle metoda je tvorena automaticky diky [ObservableProperty] a spusti se kdykoliv, kdyz se _daysCount zmeni. Ja tady tu metodu jenom "specifikuju" a urcuju ji logiku, co se stane, sama o sobe uz ale existuje
     {
-        if (DaysCount > CurrentDay)
-        {
-            DaysRemaining = DaysCount - CurrentDay;
-        }
-        trackingStart = DateTime.Now;
+        //novy zacatek trackingu
+        trackingStart = DateTime.Now; 
+        CurrentDay = 0;
+        DaysRemaining = 0;
     }
+
+    partial void OnCurrentDayChanged(uint value)
+    {
+        DaysRemaining = DaysCount - CurrentDay;
+    }
+
 
     #region DataManager Methods
     public void SetHabit(List<Habit> habitList) //vezme list (z DataManager) a postupne prida habity do HabitCollection, aby mohla zustat private
@@ -103,14 +108,11 @@ public partial class MainViewModel : ViewModelBase
         File.WriteAllText(daysData, string.Empty);
     }
 
-    //TODO - SAVE ON CLOSE . SAVE DATETIME AND UPDATE CURRENT DAY + DAYS REMAINING 
+    //TODO - SAVE ON CLOSE
     
     [RelayCommand]
     public void SaveAll()
     {
-        DataManager test = new DataManager(this);
-       test.SaveAll();
-
-   
+        //TODO: save all
     }
 }

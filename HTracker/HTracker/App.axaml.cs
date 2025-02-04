@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -12,6 +13,7 @@ namespace HTracker;
 
 public partial class App : Application
 {
+    private MainViewModel _mainViewModel; //deklaruju mainViewModel
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -25,13 +27,15 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) //jestli se program spustil normalne jako desktop aplikace
         {
-            var mainViewModel = new MainViewModel(); //vytvorim novou instanci classy MainViewModel (kterou potrebuju) (sama by se vytvorila pozdeji v kodu na radku 28)
+            _mainViewModel = new MainViewModel(); //inicializuju _mainViewModel jako novy MainViewModel
             desktop.MainWindow = new MainWindow //vytvorim nove okno desktop aplikace
             {
-                DataContext = mainViewModel //ukazuju, ze xaml kod bude binding data brat z instance mainViewModel (vytvoril jsem ho na radku 25)
+                DataContext = _mainViewModel //ukazuju, ze xaml kod bude binding data brat z instance mainViewModel (vytvoril jsem ho na radku 25)
             };
             desktop.Exit += OnAppExit; //"kdyz se aplikace vypne, zavolej event handler ,OnAppExit," = "Kdyz se stane desktop.Exit, spust event handler OnAppExit". Kdyby tam bylo -= tak to znamena - "Kdyz se stane tohle, nespoustej tenhle event handler"
+            
         }
+        
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             singleViewPlatform.MainView = new MainView
@@ -42,9 +46,10 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    private void OnAppExit(object? sender, ControlledApplicationLifetimeExitEventArgs e) //event handler
+    
+    private void OnAppExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
     {
-        Debug.WriteLine("Exit");
+        _mainViewModel.Hello();
     }
+
 }

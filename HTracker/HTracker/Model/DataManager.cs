@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using HTracker.ViewModels;
@@ -10,8 +11,8 @@ namespace HTracker.Model;
 public class DataManager(MainViewModel mainViewModel)
 {
     /// <summary>
-    /// FINISHED: save dates(lastOpened, trackingStart), load date and uncheck all habits if last opened in more than 24h
-    /// TODO: load dates = change habits and days. Save on app exit
+    /// FINISHED: load dates and change CurrentDay and DaysRemaining, Change CurrentDay and DaysRemaining when changing DaysCount in the UI
+    /// TODO: Save on an app exit
     /// </summary>
     private readonly DateTime _todayDate = DateTime.Now;
     string folderPath;
@@ -72,26 +73,28 @@ public class DataManager(MainViewModel mainViewModel)
             mainViewModel.CurrentDay = daysDictionary["CurrentDay"];
         }
         #endregion
-        
         #region Habits
         filePath = Path.Combine(Folder(), "habitsData.json"); //adresa souboru
         jsonString = File.ReadAllText(filePath); //prevedu do .json do stringu
         var habitList = JsonSerializer.Deserialize<List<Habit>>(jsonString); //priradim objekty .json do habitList
         mainViewModel.SetHabit(habitList); //spusti se metoda SetHabit v MainViewModel -> ta prida obsah habitList do jeji ObservableCollection HabitCollection, abych vlastne primo nepracoval s HabitCollection(aby nemusela byt public)
         #endregion
-        
         #region Dates
         //precist data -> lastOpened, jestli rozdil napsaneho a dnesniho data je vetsi nez 24h --> reset all habit checks
         TimeSpan timeDifference;
         filePath = Path.Combine(Folder(), "datesData.json");
         jsonString = File.ReadAllText(filePath);
         var datesDictionary = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(jsonString);
+        //habits
         timeDifference = datesDictionary["LastOpened"] - _todayDate; //ve dnech, rozdil mezi starym zapsanym datem a dnesnim
         if (Math.Abs(timeDifference.Days) > 1) //pokud je rozdil (v absolutni hodnote) ve dnech vetsi nez 1. (pokud to naposledy otevrel 24h vcera)
         {
             mainViewModel.UnCheckHabits();
         }
-        
+        //days
+        //Timespan, hodnotu rozdilu dnu tarckingStart a dateTime.Now = kolik dnu ubehlo od zacatku trackingu
+        timeDifference = datesDictionary["TrackingStart"] - _todayDate;
+        mainViewModel.CurrentDay = Convert.ToUInt32(Math.Abs(timeDifference.Days)); //tryParse
         #endregion
     }
 }
